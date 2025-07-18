@@ -14,7 +14,7 @@ public class VillaApiController : ControllerBase
         return Ok(VillaStore.VillaList);
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}",Name="GetVilla")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -33,6 +33,26 @@ public class VillaApiController : ControllerBase
         {
             return Ok(villa);
         }
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public ActionResult<VillaDTO> CreateVilla([FromBody]VillaDTO villaDTO)
+    {
+        if (villaDTO == null)
+        {
+            return BadRequest(villaDTO);
+        }
+        if(villaDTO.Id==0)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        villaDTO.Id = VillaStore.VillaList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+        VillaStore.VillaList.Add(villaDTO);
+        return CreatedAtRoute("GetVilla",new{id=villaDTO.Id},villaDTO);
     }
     
     
