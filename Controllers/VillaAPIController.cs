@@ -1,3 +1,4 @@
+using System.Data;
 using MagicVilla_API.Data;
 using MagicVilla_API.Models;
 using MagicVilla_API.Models.Dto;
@@ -39,21 +40,51 @@ public class VillaApiController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public ActionResult<VillaDTO> CreateVilla([FromBody]VillaDTO villaDTO)
     {
-        if (villaDTO == null)
+        if (ModelState.IsValid)
         {
-            return BadRequest(villaDTO);
+            if (villaDTO == null)
+            {
+                return BadRequest(villaDTO);
+            }
+
+            if (villaDTO.Id > 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            if (VillaStore.VillaList.Any(u => u.Name == villaDTO.Name))
+            {
+                ModelState.AddModelError("DuplicateVilla", "Villa name already exists");
+                return BadRequest(ModelState);
+            }
+            villaDTO.Id = VillaStore.VillaList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
+            VillaStore.VillaList.Add(villaDTO);
+            return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
         }
-        if(villaDTO.Id==0)
+        else
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return BadRequest(ModelState);
+        }
+    }
+
+    [HttpDelete("{id:int}", Name = "DeleteVilla")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public IActionResult DeleteVilla(int id)
+    {
+        if (id == 0)
+        {
+            return BadRequest();
+        }
+        var villa = VillaStore.VillaList.FirstOrDefault(u => u.Id == id);
+        if (villa == null)
+        {
+            return NotFound();
         }
 
-        villaDTO.Id = VillaStore.VillaList.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
-        VillaStore.VillaList.Add(villaDTO);
-        return CreatedAtRoute("GetVilla",new{id=villaDTO.Id},villaDTO);
+        VillaStore.VillaList.Remove(villa);
+        return NoContent();
     }
-    
-    
 }
