@@ -1,4 +1,5 @@
 using System.Data;
+using System.Runtime.CompilerServices;
 using MagicVilla_API.Data;
 using MagicVilla_API.Models;
 using MagicVilla_API.Models.Dto;
@@ -10,9 +11,17 @@ namespace MagicVilla_API.Controllers;
 [ApiController]
 public class VillaApiController : ControllerBase
 {
+    private readonly ILogger<VillaApiController> _logger;
+
+    public VillaApiController(ILogger<VillaApiController> logger)
+    {
+        _logger = logger;
+    }
+    
     [HttpGet]
     public ActionResult<IEnumerable<VillaDTO>> GetVillas()
     {
+        _logger.LogInformation("Getting All Values");
         return Ok(VillaStore.VillaList);
     }
 
