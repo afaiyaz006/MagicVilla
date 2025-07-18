@@ -1,13 +1,13 @@
 
 using Microsoft.AspNetCore.HttpLogging;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
+Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo
+    .File("log/logs.txt", rollingInterval: RollingInterval.Day).CreateLogger();
 // Add services to the container.
-builder.Services.AddControllers(option =>
-{
-    option.ReturnHttpNotAcceptable = true;
-}).AddNewtonsoftJson();
+builder.Host.UseSerilog();
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpLogging(logging =>
     {
