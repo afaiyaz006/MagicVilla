@@ -9,17 +9,23 @@ public class VillaStore
         new VillaDTO
         {
             Id = 1,
-            Name = "Pool View"
+            Name = "Pool View",
+            Sqft = 1,
+            Occupancy = 1
         },
         new VillaDTO
         {
             Id = 2,
-            Name = "Lake View"
+            Name = "Lake View",
+            Sqft = 2,
+            Occupancy = 3
         },
         new VillaDTO
         {
             Id=3,
-            Name="Lake Lake"
+            Name="Lake Lake",
+            Sqft = 4,
+            Occupancy = 5
         }
     };
 }
