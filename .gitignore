@@ -5,3 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 log
 log/*
+/.vs/MagicVilla/CopilotIndices/17.14.878.3237
+/.vs/MagicVilla/DesignTimeBuild
+/.vs/MagicVilla/FileContentIndex
+/Migrations
