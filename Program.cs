@@ -4,6 +4,7 @@ using MagicVilla_API.Models;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MagicVilla_API.Repository;
 using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 // Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(option => {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
 builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddScoped<IVillaRepository, VillaRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpLogging(logging =>
     {
