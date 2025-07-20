@@ -94,7 +94,7 @@ public class VillaApiController : ControllerBase
 
     [HttpDelete("{id:int}", Name = "DeleteVilla")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public IActionResult DeleteVilla(int id)
+    public async Task<IActionResult> DeleteVilla(int id)
     {
         if (id == 0)
         {
@@ -107,7 +107,7 @@ public class VillaApiController : ControllerBase
         }
 
         _db.Villas.Remove(villa);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
         return NoContent();
     }
 
@@ -117,7 +117,7 @@ public class VillaApiController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public IActionResult UpdateResult(int id,[FromBody]VillaUpdateDTO villaDTO)
+    public async Task<IActionResult> UpdateResult(int id,[FromBody]VillaUpdateDTO villaDTO)
     {
         if (villaDTO == null || id != villaDTO.Id)
         {
@@ -142,21 +142,21 @@ public class VillaApiController : ControllerBase
             Updated = DateTime.Now
         };
         _db.Villas.Update(villa);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
         return NoContent();
     }
 
     [HttpPatch("{id:int}", Name = "UpdatePartialVilla")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> patchDTO)
+    public async Task<IActionResult> UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> patchDTO)
     {
         if (patchDTO == null || id == 0)
         {
             return BadRequest();
         }
         
-        var villa = _db.Villas.AsNoTracking().FirstOrDefault(u => u.Id == id);
+        var villa =await _db.Villas.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
         
         if (villa == null)
         {
@@ -188,7 +188,7 @@ public class VillaApiController : ControllerBase
             Updated = DateTime.Now
         };
         _db.Villas.Update(model);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
 
         if (!ModelState.IsValid)
         {
