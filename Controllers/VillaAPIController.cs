@@ -5,6 +5,7 @@ using MagicVilla_API.Models;
 using MagicVilla_API.Models.Dto;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MagicVilla_API.Controllers;
 [Route("api/VillaAPI")]
@@ -24,23 +25,23 @@ public class VillaApiController : ControllerBase
     }
     
     [HttpGet]
-    public ActionResult<IEnumerable<VillaDTO>> GetVillas()
+    public async  Task<ActionResult<IEnumerable<VillaDTO>>> GetVillas()
     {
         _logger.LogInformation("Getting All Values");
-        return Ok(_db.Villas);
+        return Ok(await _db.Villas.ToListAsync());
     }
 
     [HttpGet("{id:int}",Name="GetVilla")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<VillaDTO> GetVilla(int id)
+    public async Task<ActionResult<VillaDTO>> GetVilla(int id)
     {
         if (id <= 0 )
         {
             return BadRequest();
         }
-        var villa = _db.Villas.FirstOrDefault(u => u.Id == id);
+        var villa =await _db.Villas.FirstOrDefaultAsync(u => u.Id == id);
         if (villa == null)
         {
             return NotFound();
@@ -56,7 +57,7 @@ public class VillaApiController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public ActionResult<VillaDTO> CreateVilla([FromBody]VillaDTO villaDTO)
+    public async  Task<ActionResult<VillaDTO>> CreateVilla([FromBody]VillaCreateDTO villaDTO)
     {
         if (ModelState.IsValid)
         {
@@ -64,12 +65,6 @@ public class VillaApiController : ControllerBase
             {
                 return BadRequest(villaDTO);
             }
-
-            if (villaDTO.Id > 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-
             if (_db.Villas.Any(u => u.Name == villaDTO.Name))
             {
                 ModelState.AddModelError("DuplicateVilla", "Villa name already exists");
@@ -80,15 +75,16 @@ public class VillaApiController : ControllerBase
                 Name = villaDTO.Name,
                 Occupancy = villaDTO.Occupancy,
                 Sqft = villaDTO.Sqft,
-                ImageUrl = villaDTO.i,
+                ImageUrl = villaDTO.ImageUrl,
                 Amenity = villaDTO.Amenity,
                 Details = villaDTO.Details,
+                Rate = villaDTO.Rate,
                 Created = DateTime.Now,
                 Updated = DateTime.Now
             };
-            _db.Villas.Add(villa);
-            _db.SaveChanges();
-            return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
+            await _db.Villas.AddAsync(villa);
+            await _db.SaveChangesAsync();
+            return CreatedAtRoute("GetVilla", new { id = villa.Id }, villa);
         }
         else
         {
@@ -111,6 +107,7 @@ public class VillaApiController : ControllerBase
         }
 
         _db.Villas.Remove(villa);
+        _db.SaveChanges();
         return NoContent();
     }
 
@@ -120,7 +117,7 @@ public class VillaApiController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public IActionResult UpdateResult(int id,[FromBody]VillaDTO villaDTO)
+    public IActionResult UpdateResult(int id,[FromBody]VillaUpdateDTO villaDTO)
     {
         if (villaDTO == null || id != villaDTO.Id)
         {
@@ -159,7 +156,8 @@ public class VillaApiController : ControllerBase
             return BadRequest();
         }
         
-        var villa = _db.Villas.FirstOrDefault(u => u.Id == id);
+        var villa = _db.Villas.AsNoTracking().FirstOrDefault(u => u.Id == id);
+        
         if (villa == null)
         {
             return BadRequest();
@@ -185,6 +183,7 @@ public class VillaApiController : ControllerBase
             ImageUrl = villaDTo.ImageUrl,
             Amenity = villaDTo.Amenity,
             Details = villaDTo.Details,
+            Rate = villaDTo.Rate,
             Created = DateTime.Now,
             Updated = DateTime.Now
         };
