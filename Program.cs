@@ -1,7 +1,9 @@
 
 using MagicVilla_API.Data;
+using MagicVilla_API.Models;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 // Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo
@@ -25,7 +27,11 @@ builder.Services.AddHttpLogging(logging =>
     }
 );
 builder.Services.AddSwaggerGen();
+// Replace this line:
+// builder.Services.AddAutoMapper(typeof(MapperConfig));
 
+// With this line:
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MapperConfig>());
 // builder.Services.AddOpenApi();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
