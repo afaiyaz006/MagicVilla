@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicVilla-API", "MagicVilla-API.csproj", "{6D04D6F5-F0B6-4562-B519-5384F13499DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicVilla-API", "MagicVilla-API/MagicVilla-API.csproj", "{6D04D6F5-F0B6-4562-B519-5384F13499DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicVilla-Web", "MagicVilla-Web\MagicVilla-Web.csproj", "{9141F8E3-EEE5-4A80-A0AD-A88B697BD6AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +14,11 @@ Global
 		{6D04D6F5-F0B6-4562-B519-5384F13499DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D04D6F5-F0B6-4562-B519-5384F13499DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D04D6F5-F0B6-4562-B519-5384F13499DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9141F8E3-EEE5-4A80-A0AD-A88B697BD6AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9141F8E3-EEE5-4A80-A0AD-A88B697BD6AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9141F8E3-EEE5-4A80-A0AD-A88B697BD6AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9141F8E3-EEE5-4A80-A0AD-A88B697BD6AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal
