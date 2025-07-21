@@ -73,7 +73,7 @@ public class VillaApiController : ControllerBase
                 return BadRequest(villaDTO);
             }
             var villaExists = await _dbVilla.GetAsync(u => u.Name.ToLower() == villaDTO.Name.ToLower());
-            if (villaExists==null)
+            if (villaExists!=null)
             {
                 ModelState.AddModelError("DuplicateVilla", "Villa name already exists");
                 return BadRequest(ModelState);
@@ -161,48 +161,31 @@ public class VillaApiController : ControllerBase
         {
             return BadRequest();
         }
-        
-        var villa =await _dbVilla.GetAsync(u => u.Id == id);
-        
+
+        var villa = await _dbVilla.GetAsync(u => u.Id == id);
+
         if (villa == null)
         {
             return BadRequest();
         }
-        var villaDTo = _mapper.Map<VillaDTO>(villa);
-        //VillaDTO villaDTo = new()
-        //{
-        //    Amenity = villa.Amenity,
-        //    Details = villa.Details,
-        //    Id = villa.Id,
-        //    ImageUrl = villa.ImageUrl,
-        //    Name = villa.Name,
-        //    Occupancy = villa.Occupancy,
-        //    Rate = villa.Rate,
-        //    Sqft = villa.Sqft
-        //};
-        patchDTO.ApplyTo(villaDTo,ModelState);
-        Villa model = _mapper.Map<Villa>(villaDTo);
-        //Villa model = new()
-        //{
-        //    Id = villaDTo.Id,
-        //    Name = villaDTo.Name,
-        //    Occupancy = villaDTo.Occupancy,
-        //    Sqft = villaDTo.Sqft,
-        //    ImageUrl = villaDTo.ImageUrl,
-        //    Amenity = villaDTo.Amenity,
-        //    Details = villaDTo.Details,
-        //    Rate = villaDTo.Rate,
-        //    Created = DateTime.Now,
-        //    Updated = DateTime.Now
-        //};
-        await _dbVilla.UpdateAsync(model);
+
+        var villaDTO = _mapper.Map<VillaDTO>(villa);
+
+        patchDTO.ApplyTo(villaDTO, ModelState);
 
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        return NoContent();
+        // Map the patched DTO back onto the existing tracked entity
+        _mapper.Map(villaDTO, villa);
 
+        // Update the entity (villa is already tracked, so no need to Update())
+        villa.Updated = DateTime.Now;
+        await _dbVilla.SaveAsync();
+
+        return NoContent();
     }
+
 }

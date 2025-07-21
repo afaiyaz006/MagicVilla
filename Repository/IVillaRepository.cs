@@ -10,7 +10,7 @@ namespace MagicVilla_API.Repository
         Task<Villa> GetAsync(Expression<Func<Villa,bool>> filter = null,bool tracked = true);
 
         Task CreateAsync(Villa entity);
-        Task UpdateAsync(Villa entity);
+        Task<Villa> UpdateAsync(Villa entity);
         Task RemoveAsync(Villa entity);
         Task SaveAsync();
     }

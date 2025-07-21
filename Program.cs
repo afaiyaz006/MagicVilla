@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(option => {
 });
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddScoped<IVillaRepository, VillaRepository>();
+builder.Services.AddScoped<IVillaNumberRepository, VillaNumberRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpLogging(logging =>
     {
