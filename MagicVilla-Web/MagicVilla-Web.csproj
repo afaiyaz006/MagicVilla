@@ -7,4 +7,9 @@
         <RootNamespace>MagicVilla_Web</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="15.0.1" />
+      <PackageReference Include="EntityFrameworkCore.Initialization" Version="5.0.2" />
+    </ItemGroup>
+
 </Project>
