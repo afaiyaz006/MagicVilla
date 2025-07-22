@@ -25,17 +25,18 @@ public class VillaController:Controller
     {
         
         List<VillaDTO> list = new();
-        // var response = await _villaService.GetAllAsync<APIResponse>();
-        // Console.WriteLine(response.StatusCode);
-        // Console.WriteLine(response.IsSuccess);
-        //
-        // if (response != null && response.IsSuccess)
-        // {
-        //     list = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result));
-        //     
-        // }
-        var response = await _villaService.GetAllAsync<List<VillaDTO>>();
-        return View(response);
+        var response = await _villaService.GetAllAsync<APIResponse>();
+        Console.WriteLine(response.StatusCode);
+        Console.WriteLine(response.IsSuccess);
+        
+        if (response != null && response.IsSuccess)
+        {
+            list = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result));
+            
+        }
+        // var response = await _villaService.GetAllAsync<List<VillaDTO>>();
+        // return View(response);
+        return View(list);
     }
 
     // public IActionResult IndexVilla()
