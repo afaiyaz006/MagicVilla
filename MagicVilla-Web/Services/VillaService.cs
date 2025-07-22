@@ -58,10 +58,11 @@ public class VillaService:BaseService, IVillaService
 
     public Task<T> DeleteAsync<T>(int id)
     {
+        Console.WriteLine("Deleting "+id);
         return SendAsync<T>(new APIRequest()
         {
             ApiType = SD.ApiType.DELETE,
-            Url = villaUrl+"/api/villaAPI"+id
+            Url = villaUrl+"/api/villaAPI/"+id
         });
     }
 }
