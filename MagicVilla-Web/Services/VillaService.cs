@@ -45,14 +45,14 @@ public class VillaService:BaseService, IVillaService
         
     }
 
-    public Task<T> UpdateAsync<T>(VillaUpdateDTO dto)
+    public Task<T> UpdateAsync<T>(int id,VillaUpdateDTO dto)
     {
         return SendAsync<T>(
             new APIRequest()
             {
                 ApiType = SD.ApiType.PUT,
                 Data = dto,
-                Url = villaUrl + "/api/villaAPI"
+                Url = villaUrl + "/api/villaAPI/"+id
             });
     }
 
