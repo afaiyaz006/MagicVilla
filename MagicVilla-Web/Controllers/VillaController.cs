@@ -39,6 +39,28 @@ public class VillaController:Controller
         return View(list);
     }
 
+    public async Task<IActionResult> CreateVilla(VillaCreateDTO model)
+    {
+        List<VillaDTO> list = new();
+        if (ModelState.IsValid)
+        {
+            var response = await _villaService.CreateAsync<APIResponse>(model);
+            
+            if (response != null && response.IsSuccess)
+            {
+                // list = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result));
+                return RedirectToAction(nameof(IndexVilla));
+            }
+    
+            return View(model);            
+            
+        }
+
+        return View(model);
+
+    }
+    
+    
     // public IActionResult IndexVilla()
     // {
     //     return View();
