@@ -73,7 +73,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-
 // JWT Authentication
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
 builder.Services.AddAuthentication(x =>
