@@ -58,7 +58,7 @@ public class UserRepository:IUserRepository
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name,user.Id.ToString()),
+                    new Claim(ClaimTypes.Name,user.Username.ToString()),
                     new Claim(ClaimTypes.Role,user.Role)
                 }),
                 Expires=DateTime.Now.AddHours(2),
