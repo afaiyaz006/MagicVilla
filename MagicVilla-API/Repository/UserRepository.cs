@@ -1,10 +1,14 @@
 using System.Configuration;
+using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+
+using MagicVilla_API.Controllers;
 using MagicVilla_API.Data;
 using MagicVilla_API.Models;
 using MagicVilla_API.Models.Dto;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MagicVilla_API.Repository;
@@ -13,22 +17,33 @@ public class UserRepository:IUserRepository
 {
     private readonly ApplicationDBContext _db;
     private string secretKey;
-    public UserRepository(ApplicationDBContext db,IConfiguration configuration)
+    private readonly IMapper _mapper;
+    public UserRepository(ApplicationDBContext db,IConfiguration configuration,IMapper mapper)
     {
         _db = db;
         secretKey = configuration.GetValue<string>("ApiSettings:Secret");
+        _mapper = mapper;
     }
     public bool IsUniqueUser(string username)
     {
         var user =  _db.LocalUsers.FirstOrDefault(x => x.Username == username);
         if (user == null)
+        {
+            Console.WriteLine("No user with "+username+" was found");
+
+            return true;
+        }
+        else
+        {
+            Console.WriteLine("User with "+username+" was found.");
             return false;
-        return true;
+        }
     }
 
     public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
     {
-        var user = _db.LocalUsers.FirstOrDefault(u => u.Username.ToLower() == loginRequestDTO.UserName.ToLower() && u.Password == loginRequestDTO.Password);
+        Console.WriteLine("Login Service invoked");
+        var user =await _db.LocalUsers.FirstOrDefaultAsync(u => u.Username.ToLower() == loginRequestDTO.UserName.ToLower() && u.Password == loginRequestDTO.Password);
         if (user == null)
         {
             return null;
@@ -54,7 +69,7 @@ public class UserRepository:IUserRepository
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
             {
                 Token = tokenHandler.WriteToken(token),
-                User = user
+                User = _mapper.Map<LocalUser,UserDTO>(user)
             };
             return loginResponseDTO;
         }
@@ -63,6 +78,7 @@ public class UserRepository:IUserRepository
     public  async Task<LocalUser> Register(RegistrationRequestDTO registrationRequestDTO)
     {
         // throw new NotImplementedException();
+        Console.WriteLine("Registration invoked...");
         LocalUser user = new LocalUser()
         {
             Username = registrationRequestDTO.UserName,
@@ -70,7 +86,7 @@ public class UserRepository:IUserRepository
             Name = registrationRequestDTO.Name,
             Role = registrationRequestDTO.Role,
         };
-        _db.LocalUsers.Add(user);
+        await _db.LocalUsers.AddAsync(user);
         await _db.SaveChangesAsync();
         user.Password = "";
         return user;

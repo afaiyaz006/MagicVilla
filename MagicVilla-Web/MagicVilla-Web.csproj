@@ -10,6 +10,7 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="15.0.1" />
       <PackageReference Include="EntityFrameworkCore.Initialization" Version="5.0.2" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.13.0" />
     </ItemGroup>
 
 </Project>
