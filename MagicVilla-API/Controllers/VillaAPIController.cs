@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using AutoMapper;
 using MagicVilla_API.Models;
 using MagicVilla_API.Models.Dto;
@@ -33,14 +34,22 @@ namespace MagicVilla_API.Controllers
         }
         // [MapToApiVersion("1.0")]
         [HttpGet]
-        public async Task<ActionResult<APIResponse>> GetVillas()
+        public async Task<ActionResult<APIResponse>> GetVillas(int pageSize=0,int pageNumber =1)
         {
             try
             {
                 _logger.LogInformation("Getting All Villas");
-                IEnumerable<Villa> villaList = await _dbVilla.GetAllAsync();
+                IEnumerable<Villa> villaList = await _dbVilla.GetAllAsync(
+                    null,true,pageSize, pageNumber
+                 );
                 _response.Result = _mapper.Map<IEnumerable<VillaDTO>>(villaList);
                 _response.StatusCode = HttpStatusCode.OK;
+                Pagination pagination = new Pagination
+                {
+                    PageNumber = pageNumber,
+                    PageSize= pageSize
+                };
+                Response.Headers.Add("X-Pagination",JsonSerializer.Serialize(pagination));
                 return Ok(_response);
             }
             catch (Exception ex)
