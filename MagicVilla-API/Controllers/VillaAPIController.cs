@@ -100,7 +100,7 @@ namespace MagicVilla_API.Controllers
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
-
+                Console.WriteLine(villaDTO);
                 var villaExists = await _dbVilla.GetAsync(u => u.Name.ToLower() == villaDTO.Name.ToLower());
                 if (villaExists != null)
                 {

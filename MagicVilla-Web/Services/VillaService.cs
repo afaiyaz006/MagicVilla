@@ -16,53 +16,58 @@ public class VillaService:BaseService, IVillaService
         villaUrl = configuration.GetValue<string>("ServiceUrls:VillaAPI");
     }
 
-    public Task<T> GetAllAsync<T>()
+    public Task<T> GetAllAsync<T>(string token)
     {
         return SendAsync<T>(new APIRequest()
         {
             ApiType = SD.ApiType.GET,
-            Url = villaUrl+"/api/v1/villaAPI"
+            Url = villaUrl+"/api/v1/villaAPI",
+            Token =  token
         });
     }
 
-    public Task<T> GetAsync<T>(int id)
+    public Task<T> GetAsync<T>(int id,string token)
     {
         return SendAsync<T>(new APIRequest()
         {
             ApiType = SD.ApiType.GET,
-            Url = villaUrl+"/api/v1/villaAPI/"+id
+            Url = villaUrl+"/api/v1/villaAPI/"+id,
+            Token = token
         });
     }
 
-    public Task<T> CreateAsync<T>(VillaCreateDTO dto)
+    public Task<T> CreateAsync<T>(VillaCreateDTO dto,string token)
     {
         return SendAsync<T>(new APIRequest()
         {
             ApiType = SD.ApiType.POST,
             Data = dto,
-            Url = villaUrl+"/api/v1/villaAPI"
+            Url = villaUrl+"/api/v1/villaAPI",
+            Token = token
         });
         
     }
 
-    public Task<T> UpdateAsync<T>(int id,VillaUpdateDTO dto)
+    public Task<T> UpdateAsync<T>(int id,VillaUpdateDTO dto,string token)
     {
         return SendAsync<T>(
             new APIRequest()
             {
                 ApiType = SD.ApiType.PUT,
                 Data = dto,
-                Url = villaUrl + "/api/v1/villaAPI/"+id
+                Url = villaUrl + "/api/v1/villaAPI/"+id,
+                Token = token
             });
     }
 
-    public Task<T> DeleteAsync<T>(int id)
+    public Task<T> DeleteAsync<T>(int id,string token)
     {
         Console.WriteLine("Deleting "+id);
         return SendAsync<T>(new APIRequest()
         {
             ApiType = SD.ApiType.DELETE,
-            Url = villaUrl+"/api/v1/villaAPI/"+id
+            Url = villaUrl+"/api/v1/villaAPI/"+id,
+            Token = token
         });
     }
 }
