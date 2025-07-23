@@ -50,8 +50,10 @@ public class UserRepository:IUserRepository
         }
         else
         {
+            
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secretKey);
+            var key = secretKey;
+            Console.WriteLine("Secret key "+secretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -61,7 +63,7 @@ public class UserRepository:IUserRepository
                 }),
                 Expires=DateTime.Now.AddHours(2),
                 SigningCredentials = new(
-                    new SymmetricSecurityKey(key),
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                     SecurityAlgorithms.HmacSha256
                 )
             };
@@ -79,6 +81,7 @@ public class UserRepository:IUserRepository
     {
         // throw new NotImplementedException();
         Console.WriteLine("Registration invoked...");
+        Console.WriteLine(registrationRequestDTO.ToString());
         LocalUser user = new LocalUser()
         {
             Username = registrationRequestDTO.UserName,
