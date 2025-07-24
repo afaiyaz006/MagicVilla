@@ -9,6 +9,7 @@ using MagicVilla_API.Data;
 using MagicVilla_API.Models;
 using MagicVilla_API.Models.Dto;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -87,7 +88,7 @@ public class UserRepository:IUserRepository
             {
                 Token = tokenHandler.WriteToken(token),
                 User = _mapper.Map<ApplicationUser,UserDTO>(user),
-                Role = roles.FirstOrDefault()
+                // Role = roles.FirstOrDefault()
             };
             return loginResponseDTO;
         }
@@ -113,17 +114,20 @@ public class UserRepository:IUserRepository
         
             if (result.Succeeded)
             {
+                
                 if (!_roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
                 {
                     await _roleManager.CreateAsync(new IdentityRole("admin"));
+                    await _roleManager.CreateAsync(new IdentityRole("user"));
                 }
                 Console.WriteLine("User creation complete.");
-                await _userManager.AddToRoleAsync(user, "admin");
+                await _userManager.AddToRoleAsync(user,"admin");
                 var userToReturn = _db.ApplicationUsers
                     .FirstOrDefault(u => u.UserName == registrationRequestDTO.UserName);
-
+                
                 response.Success = true;
-                response.User = _mapper.Map<ApplicationUser,UserDTO>(userToReturn);
+                response.User = _mapper.Map<UserDTO>(userToReturn);
+                response.User.Role = "admin";
             }
             else
             {
