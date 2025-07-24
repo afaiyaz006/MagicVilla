@@ -1,5 +1,5 @@
-namespace MagicVilla_API.Controllers;
 
+namespace MagicVilla_API.Models.Dto;
 public class UserDTO
 {
     public string ID { get; set; }

@@ -1,4 +1,5 @@
 using System.Text;
+using MagicVilla_API;
 using MagicVilla_API.Data;
 using MagicVilla_API.Models;
 using MagicVilla_API.Repository;
@@ -35,7 +36,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // AutoMapper
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MapperConfig>());
 //Identity framework
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>();
+// builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>();
+builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>();
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

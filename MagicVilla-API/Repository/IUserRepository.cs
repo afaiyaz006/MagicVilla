@@ -1,3 +1,4 @@
+using MagicVilla_API.Controllers;
 using MagicVilla_API.Models;
 using MagicVilla_API.Models.Dto;
 
@@ -7,6 +8,6 @@ public interface IUserRepository
 {
     bool IsUniqueUser(string username);
     Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO);
-    Task<LocalUser> Register(RegistrationRequestDTO registrationRequestDTO);
+    Task<RegistrationResponseDTO> Register(RegistrationRequestDTO registrationRequestDTO);
     
 }

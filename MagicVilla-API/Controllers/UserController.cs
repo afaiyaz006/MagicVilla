@@ -41,9 +41,11 @@ namespace MagicVilla_API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDTO model)
         {
-            Console.WriteLine("Username: "+model.UserName.ToString());
+            Console.WriteLine("Username: " + model.UserName);
+
             bool ifUserNameUnique = _userRepo.IsUniqueUser(model.UserName);
-            Console.WriteLine(ifUserNameUnique.ToString());
+            Console.WriteLine("Is username unique: " + ifUserNameUnique);
+
             if (!ifUserNameUnique)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
@@ -52,17 +54,21 @@ namespace MagicVilla_API.Controllers
                 return BadRequest(_response);
             }
 
-            var user = await _userRepo.Register(model);
-            if (user == null)
+            var registrationResult = await _userRepo.Register(model);
+
+            if (!registrationResult.Success)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Error while registering");
+                _response.ErrorMessages = registrationResult.Errors;
                 return BadRequest(_response);
             }
+
             _response.StatusCode = HttpStatusCode.OK;
             _response.IsSuccess = true;
+            _response.Result = registrationResult.User; // Include the user info if needed
             return Ok(_response);
         }
+
     }
 }
