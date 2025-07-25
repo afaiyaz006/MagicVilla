@@ -11,6 +11,7 @@
         <PackageReference Include="AutoMapper" Version="15.0.1" />
         <PackageReference Include="EntityFrameworkCore.Initialization" Version="5.0.2" />
         <PackageReference Include="EntityFrameworkCore.InMemory.HierarchyId" Version="8.0.0" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.7" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.7" />
         <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="9.0.7" />

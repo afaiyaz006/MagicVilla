@@ -1,6 +1,7 @@
 using AutoMapper;
 using MagicVilla_Web.Models;
 using MagicVilla_Web.Models.Dto;
+using MagicVilla_Web.Models.VM;
 using MagicVilla_Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -37,7 +38,7 @@ public class VillaNumberController:Controller
         return View(list);
     }
 
-    public async Task<IActionResult> CreateVilla(VillaNumberCreateDTO model)
+    public async Task<IActionResult> CreateVillaNumber(VillaNumberCreateDTO model)
     {
         List<VillaNumberDTO> list = new();
         if (ModelState.IsValid)
@@ -50,21 +51,21 @@ public class VillaNumberController:Controller
                 return RedirectToAction(nameof(IndexVillaNumber));
             }
     
-            return View(model);            
+            return View();            
             
         }
 
-        return View(model);
+        return View(_mapper.Map<VillaNumberCreateVM>(model));
 
     }
 
-    public async Task<IActionResult> UpdateVilla(int villaId)
+    public async Task<IActionResult> UpdateVillaNumber(int villaId)
     {
         var response = await _villaNumberService.GetAsync<APIResponse>(villaId);
         if (response != null && response.IsSuccess)
         {
             VillaNumberDTO model = JsonConvert.DeserializeObject<VillaNumberDTO>(Convert.ToString(response.Result));
-            return View(_mapper.Map<VillaUpdateDTO>(model));
+            return View(_mapper.Map<VillaNumberUpdateVM>(model));
         }
 
         return NotFound();
@@ -72,7 +73,7 @@ public class VillaNumberController:Controller
 
     }
     [HttpPost]
-    public async Task<IActionResult> UpdateVilla(VillaNumberUpdateDTO model)
+    public async Task<IActionResult> UpdateVillaNumber(VillaNumberUpdateDTO model)
     {
         if (ModelState.IsValid)
         {
@@ -82,22 +83,23 @@ public class VillaNumberController:Controller
                 return RedirectToAction(nameof(IndexVillaNumber));
             }
         }
-        return View(model);
+
+        return View(_mapper.Map<VillaNumberUpdateVM>(model));
     }
 
-    public async Task<IActionResult> DeleteVilla(int villaId)
+    public async Task<IActionResult> DeleteVillaNumber(int villaId)
     {
         var response = await _villaNumberService.GetAsync<APIResponse>(villaId);
         if (response != null && response.IsSuccess)
         {
             VillaNumberDTO model = JsonConvert.DeserializeObject<VillaNumberDTO>(Convert.ToString(response.Result));
-            return View(_mapper.Map<VillaNumberDTO>(model));
+            return View(_mapper.Map<VillaNumberDeleteVM>(model));
         }
 
         return NotFound();
     }
     [HttpPost]
-    public async Task<IActionResult> DeleteVilla(VillaNumberDTO model)
+    public async Task<IActionResult> DeleteVillaNumber(VillaNumberDTO model)
     {
         var response = await _villaNumberService.DeleteAsync<APIResponse>(model.VillaID);
         Console.WriteLine(response.StatusCode);

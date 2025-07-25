@@ -22,8 +22,8 @@ public class HomeController : Controller
     {
         List<VillaDTO> list = new();
         var response = await _villaService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
-        Console.WriteLine(response.StatusCode);
-        Console.WriteLine(response.IsSuccess);
+        // Console.WriteLine(response.StatusCode);
+        // Console.WriteLine(response.IsSuccess);
         
         if (response != null && response.IsSuccess)
         {

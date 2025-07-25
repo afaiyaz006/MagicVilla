@@ -34,6 +34,7 @@ namespace MagicVilla_API.Controllers
         }
         // [MapToApiVersion("1.0")]
         [HttpGet]
+        [Authorize(Roles="admin")]
         public async Task<ActionResult<APIResponse>> GetVillas(int pageSize=0,int pageNumber =1)
         {
             try
@@ -61,6 +62,7 @@ namespace MagicVilla_API.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetVilla")]
+        [Authorize(Roles="admin")]
         public async Task<ActionResult<APIResponse>> GetVilla(int id)
         {
             try
@@ -135,8 +137,9 @@ namespace MagicVilla_API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
-
+      
         [HttpDelete("{id:int}", Name = "DeleteVilla")]
+        [Authorize(Roles="admin")]
         public async Task<ActionResult<APIResponse>> DeleteVilla(int id)
         {
             try
@@ -170,6 +173,7 @@ namespace MagicVilla_API.Controllers
         }
 
         [HttpPut("{id:int}", Name = "UpdateVilla")]
+        [Authorize(Roles="admin")]
         public async Task<ActionResult<APIResponse>> UpdateVilla(int id, [FromBody] VillaUpdateDTO villaDTO)
         {
             try
@@ -196,6 +200,7 @@ namespace MagicVilla_API.Controllers
         }
 
         [HttpPatch("{id:int}", Name = "UpdatePartialVilla")]
+        [Authorize(Roles="admin")]
         public async Task<ActionResult<APIResponse>> UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> patchDTO)
         {
             try
@@ -241,5 +246,13 @@ namespace MagicVilla_API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
+
+        // [HttpPost("createWithImage")]
+        // public async void CreateVillaWithImage([FromForm] VillaCreateDTOImage villaCreateDtoImage)
+        // {
+        //     Console.WriteLine("Processing file....");
+        //     Console.WriteLine(villaCreateDtoImage.File.FileName);
+        // }
+        
     }
 }
