@@ -8,8 +8,9 @@ using MagicVilla_Web.Models;
 
 namespace MagicVilla_API.Controllers
 {
-    [Route("api/villaNumber")]
+    [Route("api/v{version:apiVersion}/villaNumber")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class VillaNumberApiController : ControllerBase
     {
         private readonly ILogger<VillaNumberApiController> _logger;
@@ -155,5 +156,6 @@ namespace MagicVilla_API.Controllers
             _response.StatusCode = HttpStatusCode.NoContent;
             return Ok(_response);
         }
+        
     }
 }
